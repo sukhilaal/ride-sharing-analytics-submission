@@ -2,6 +2,8 @@
 
 An end-to-end analysis of a synthetic ride-sharing dataset covering rides, drivers, users, payments and customer support. The project brings data preparation, Excel analysis, SQL queries and Power BI reporting guidance together in one reproducible submission.
 
+![Ride-sharing analysis snapshot: trip outcomes, payment failures, ratings and customer ID quality](assets/analytics-overview.png)
+
 ## Project contents
 
 | File | Purpose |
@@ -13,6 +15,7 @@ An end-to-end analysis of a synthetic ride-sharing dataset covering rides, drive
 | [Executive_Summary_and_Business_Questions.md](Executive_Summary_and_Business_Questions.md) | Findings, recommendations, answers to the business questions, assumptions and limitations. |
 | [Ride_Sharing_Submission_Package.zip](Ride_Sharing_Submission_Package.zip) | The complete submission bundle. Download this file to get all project deliverables together. |
 | [build_project.py](build_project.py) | Script used to prepare the workbook and SQLite database from the source workbook. |
+| [build_visuals.py](build_visuals.py) | Script used to recreate the repository overview graphic from the SQLite database. |
 
 GitHub does not display Excel workbooks or ZIP archives as formatted pages. Open the file and choose **Download raw file** (or use the package link above) to view them locally. The SQL and Markdown files can be read directly in the repository.
 
@@ -25,7 +28,7 @@ The work is intended to support operational review rather than production decisi
 ## Key results
 
 - 4,690 of 5,200 rides are marked Completed (90.2%); 354 are Cancelled and 156 are No-show.
-- Wallet has the highest observed payment failure rate (4.8%) among the four payment methods; Credit Card has the lowest (3.3%).
+- 91 of 2,200 payment transactions failed (4.1%). Wallet has the highest observed method failure rate (4.8%); Credit Card has the lowest (3.3%).
 - 48.7% of ride ratings are below 3 out of 5.
 - The Users table contains 1,200 rows but only 602 distinct UserIDs. Many repeated IDs have conflicting customer attributes, so user-level retention and referral analysis needs an identity-resolution rule.
 - Ride dates span January 30 through July 31, 2025. Current-year and recent-30-day measures evaluated against the fixed analysis date of November 22, 2026 are not representative of current operations.
@@ -36,11 +39,12 @@ These figures come from a synthetic learning dataset. Unusually large fares, dis
 
 The build script reads `RIDE_SHARING_DATA.xlsx` and writes the prepared Excel workbook and SQLite database to its current directory. Set the source workbook path near the top of `build_project.py` to match your machine before running it.
 
-Required Python packages: `pandas`, `numpy`, `openpyxl` and `XlsxWriter`.
+Required Python packages: `pandas`, `numpy`, `openpyxl`, `XlsxWriter` and `Pillow`.
 
 ```bash
-python -m pip install pandas numpy openpyxl XlsxWriter
+python -m pip install pandas numpy openpyxl XlsxWriter Pillow
 python build_project.py
+python build_visuals.py
 ```
 
 The SQL file can be run against `ride_sharing.db` using SQLite. The Power BI pack is an implementation guide; this repository does not contain a `.pbix` report file.

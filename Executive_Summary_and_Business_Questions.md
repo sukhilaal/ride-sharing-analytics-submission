@@ -21,7 +21,7 @@
 - Wallet rides over 30 km that completed successfully can be filtered directly at ride grain; fare method totals in Excel reconcile to SQL when using `Rides.PaymentMethod` and all statuses.
 - Driver ride counts average 16.25 in this extract (320 drivers; range 7–31 rides). The Drivers master `TotalRides` field is orders of magnitude larger and does not match the observed ride sample; use ride-level counts for this sample.
 - Recent-60-day driver inactivity cannot be meaningfully interpreted as current behavior because all ride dates end July 2025. The SQL query returns no recent activity as of 2026-11-22.
-- The top-level payment failure rate is 4.0% (87 failed of 2,200 transactions); Wallet is highest (4.8%). Payment table counts must not be joined raw to ride totals because payment-to-ride multiplicity is not guaranteed.
+- The top-level payment failure rate is 4.1% (91 failed of 2,200 transactions); Wallet is highest (4.8%). Payment table counts must not be joined raw to ride totals because payment-to-ride multiplicity is not guaranteed.
 - Ticket categories are led by Other (64), Driver Misbehavior (50), and Payment Issue (49). There are 57 tickets not marked Resolved. The unmatched/conflicting customer identifiers require caution on customer attribution.
 
 ## Stage 5 business questions
