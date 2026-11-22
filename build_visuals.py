@@ -10,6 +10,7 @@ db = sqlite3.connect(ROOT / "ride_sharing.db")
 
 status = db.execute("SELECT Status, COUNT(*) FROM Rides GROUP BY Status ORDER BY CASE Status WHEN 'Completed' THEN 1 WHEN 'Cancelled' THEN 2 ELSE 3 END").fetchall()
 payments = db.execute("SELECT PaymentMethod, 100.0*SUM(CASE WHEN Status='Failed' THEN 1 ELSE 0 END)/COUNT(*), COUNT(*), SUM(CASE WHEN Status='Failed' THEN 1 ELSE 0 END) FROM Payments GROUP BY PaymentMethod ORDER BY 2 DESC").fetchall()
+overall_failure_rate = sum(row[3] for row in payments) / sum(row[2] for row in payments)
 ratings = db.execute("SELECT CASE WHEN Rating<2 THEN '1 to <2' WHEN Rating<3 THEN '2 to <3' WHEN Rating<4 THEN '3 to <4' ELSE '4 to 5' END, COUNT(*) FROM Rides GROUP BY 1 ORDER BY MIN(Rating)").fetchall()
 low_ratings = db.execute("SELECT COUNT(*) FROM Rides WHERE Rating<3").fetchone()[0]
 user_rows, unique_users, repeated_ids, conflicting = db.execute("""
@@ -73,7 +74,7 @@ for j,(method,rate,n,failed) in enumerate(payments):
     d.rounded_rectangle((startx,yy,startx+maxw,yy+28),radius=7,fill="#EDF1F5")
     d.rounded_rectangle((startx,yy,startx+max(4,int(maxw*rate/maxv)),yy+28),radius=7,fill=orange if method==payments[0][0] else teal)
     d.text((startx+maxw+12,yy+1),f"{rate:.1f}%  ({failed}/{n})",font=small,fill=navy)
-d.text((x+28,y+315),"Overall transaction failure rate: 4.0%",font=small,fill=muted)
+d.text((x+28,y+315),f"Overall transaction failure rate: {overall_failure_rate:.1%}",font=small,fill=muted)
 
 x,y=70,745; panel_title(x,y,"Customer ratings","Ride-level rating distribution (1–5)")
 maxn=max(n for _,n in ratings); startx=x+175; maxw=400
